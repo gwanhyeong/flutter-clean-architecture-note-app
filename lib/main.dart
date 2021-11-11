@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.teal,
       ),
       home: const NotesScreen(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
