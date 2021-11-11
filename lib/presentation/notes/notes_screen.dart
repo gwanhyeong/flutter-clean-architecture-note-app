@@ -70,7 +70,7 @@ class NotesScreen extends StatelessWidget {
 
   void _openAddEditNoteScreen(BuildContext context, [Note? note]) async {
     final viewModel = context.read<NotesViewModel>();
-    final isChanged = await Navigator.push(
+    final bool? isChanged = await Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => AddEditNoteScreen(note: note)),
     );
@@ -94,6 +94,6 @@ class NotesScreen extends StatelessWidget {
       ),
     );
 
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    (ScaffoldMessenger.of(context)..clearSnackBars()).showSnackBar(snackBar);
   }
 }

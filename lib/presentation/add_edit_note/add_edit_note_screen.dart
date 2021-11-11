@@ -47,7 +47,7 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
             Navigator.pop(context, true);
           },
           showSnackBar: (message) {
-            ScaffoldMessenger.of(context).showSnackBar(
+            (ScaffoldMessenger.of(context)..clearSnackBars()).showSnackBar(
               SnackBar(content: Text(message)),
             );
           },
@@ -70,14 +70,6 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          if (_titleTextController.text.isEmpty ||
-              _contentTextController.text.isEmpty) {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text('제목 또는 내용을 입력해주세요.'),
-            ));
-            return;
-          }
-
           context.read<AddEditNoteViewModel>().onEvent(
               AddEditNoteEvent.saveNote(widget.note?.id,
                   _titleTextController.text, _contentTextController.text));
@@ -85,7 +77,8 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
         child: const Icon(Icons.create),
       ),
       body: SafeArea(
-        child: Container(
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 500),
           color: Color(viewModel.color),
           child: ListView(
             children: [
