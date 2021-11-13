@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:note_app/domain/model/note.dart';
+import 'package:note_app/domain/util/note_order_type.dart';
 import 'package:note_app/presentation/add_edit_note/add_edit_note_screen.dart';
 import 'package:note_app/presentation/notes/notes_event.dart';
 import 'package:note_app/presentation/notes/notes_view_model.dart';
+import 'package:note_app/presentation/notes/widget/note_filter_section.dart';
 import 'package:note_app/presentation/notes/widget/note_list_item.dart';
 import 'package:provider/provider.dart';
 
@@ -12,6 +14,7 @@ class NotesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<NotesViewModel>();
+    final state = viewModel.state;
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -23,22 +26,42 @@ class NotesScreen extends StatelessWidget {
       body: SafeArea(
         child: ListView(
           children: [
-            const Padding(
-              padding: EdgeInsets.symmetric(
+            Padding(
+              padding: const EdgeInsets.symmetric(
                 vertical: 16.0,
                 horizontal: 6.0,
               ),
-              child: Text(
-                '모든 노트',
-                style: TextStyle(fontSize: 36.0, fontWeight: FontWeight.bold),
+              child: Row(
+                children: [
+                  const Text(
+                    '모든 노트',
+                    style:
+                        TextStyle(fontSize: 36.0, fontWeight: FontWeight.bold),
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    onPressed: () {
+                      viewModel.toggleFilter();
+                    },
+                    icon: const Icon(Icons.sort),
+                  ),
+                ],
               ),
             ),
+            if (viewModel.isOpenedFilter)
+              NoteFilterSection(
+                noteOrder: viewModel.state.orderType,
+                onChanged: (orderType) {
+                  _onFilterChanged(context, orderType);
+                },
+              ),
             if (viewModel.state.notes.isNotEmpty)
               ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  final note = viewModel.state.notes[index];
+                itemCount: state.notes.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final note = state.notes[index];
                   return NoteListItem(
                     note: note,
                     onNoteTap: () {
@@ -49,7 +72,6 @@ class NotesScreen extends StatelessWidget {
                     },
                   );
                 },
-                itemCount: viewModel.state.notes.length,
               )
             else
               Column(
@@ -66,6 +88,11 @@ class NotesScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _onFilterChanged(BuildContext context, NoteOrderType orderType) {
+    final viewModel = context.read<NotesViewModel>();
+    viewModel.onEvent(NotesEvent.changeOrderType(orderType));
   }
 
   void _openAddEditNoteScreen(BuildContext context, [Note? note]) async {
