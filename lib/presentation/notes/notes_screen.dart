@@ -50,12 +50,12 @@ class NotesScreen extends StatelessWidget {
             ),
             if (viewModel.isOpenedFilter)
               NoteFilterSection(
-                noteOrder: viewModel.state.orderType,
+                noteOrder: state.orderType,
                 onChanged: (orderType) {
                   _onFilterChanged(context, orderType);
                 },
               ),
-            if (viewModel.state.notes.isNotEmpty)
+            if (state.notes.isNotEmpty)
               ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -99,7 +99,7 @@ class NotesScreen extends StatelessWidget {
     final viewModel = context.read<NotesViewModel>();
     final bool? isChanged = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => AddEditNoteScreen(note: note)),
+      MaterialPageRoute(builder: (_) => AddEditNoteScreen(noteId: note?.id)),
     );
 
     if (isChanged != null && isChanged) {

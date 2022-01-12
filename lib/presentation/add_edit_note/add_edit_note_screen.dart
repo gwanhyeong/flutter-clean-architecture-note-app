@@ -1,16 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:note_app/domain/model/note.dart';
 import 'package:note_app/presentation/add_edit_note/add_edit_note_event.dart';
 import 'package:note_app/presentation/add_edit_note/add_edit_note_view_model.dart';
 import 'package:note_app/ui/colors.dart' as app_color;
 import 'package:provider/provider.dart';
 
 class AddEditNoteScreen extends StatefulWidget {
-  final Note? note;
+  final int? noteId;
 
-  const AddEditNoteScreen({Key? key, this.note}) : super(key: key);
+  const AddEditNoteScreen({Key? key, this.noteId}) : super(key: key);
 
   @override
   State<AddEditNoteScreen> createState() => _AddEditNoteScreenState();
@@ -34,15 +33,21 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
     super.initState();
     Future.microtask(() {
       final viewModel = context.read<AddEditNoteViewModel>();
-      if (widget.note != null) {
-        viewModel.onEvent(AddEditNoteEvent.changeColor(widget.note!.color));
-        _titleTextController.value = TextEditingValue(text: widget.note!.title);
-        _contentTextController.value =
-            TextEditingValue(text: widget.note!.content);
+      if (widget.noteId != null) {
+        viewModel.onEvent(AddEditNoteEvent.loadNote(widget.noteId!));
       }
 
       _streamSubscription = viewModel.eventStream.listen((event) {
         event.when(
+          loadNote: () {
+            final note = context.read<AddEditNoteViewModel>().note;
+            if (note != null) {
+              viewModel.onEvent(AddEditNoteEvent.changeColor(note.color));
+              _titleTextController.value = TextEditingValue(text: note.title);
+              _contentTextController.value =
+                  TextEditingValue(text: note.content);
+            }
+          },
           saveNote: () {
             Navigator.pop(context, true);
           },
@@ -71,7 +76,7 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           context.read<AddEditNoteViewModel>().onEvent(
-              AddEditNoteEvent.saveNote(widget.note?.id,
+              AddEditNoteEvent.saveNote(widget.noteId,
                   _titleTextController.text, _contentTextController.text));
         },
         child: const Icon(Icons.create),
@@ -88,7 +93,7 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
                   horizontal: 6.0,
                 ),
                 child: Text(
-                  widget.note == null ? '노트 작성' : '노트 편집',
+                  widget.noteId == null ? '노트 작성' : '노트 편집',
                   style: const TextStyle(
                       fontSize: 36.0, fontWeight: FontWeight.bold),
                 ),

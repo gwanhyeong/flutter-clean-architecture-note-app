@@ -12,6 +12,8 @@ class AddEditNoteViewModel with ChangeNotifier {
 
   AddEditNoteViewModel(this.useCases);
 
+  Note? note;
+
   int _color = roseBud.value;
   int get color => _color;
 
@@ -20,25 +22,45 @@ class AddEditNoteViewModel with ChangeNotifier {
 
   void onEvent(AddEditNoteEvent event) {
     event.when(
+      loadNote: _loadNote,
       saveNote: _saveNote,
       changeColor: _changeColor,
     );
   }
 
+  void _loadNote(int id) async {
+    note = null;
+
+    var result = await useCases.getNote(id);
+    result.when(
+      success: (data) {
+        note = data;
+        _eventController.add(const AddEditNoteUiEvent.loadNote());
+      },
+      error: (message) {
+        _eventController.add(
+          AddEditNoteUiEvent.showSnackBar(message),
+        );
+      },
+    );
+  }
+
   void _saveNote(int? id, String title, String content) async {
     if (title.isEmpty || content.isEmpty) {
-      _eventController
-          .add(const AddEditNoteUiEvent.showSnackBar('제목이나 내용을 입력해 주세요'));
+      _eventController.add(
+        const AddEditNoteUiEvent.showSnackBar('제목이나 내용을 입력해 주세요'),
+      );
       return;
     }
 
     if (id == null) {
       await useCases.addNote(
         Note(
-            title: title,
-            content: content,
-            color: _color,
-            timestamp: DateTime.now().millisecondsSinceEpoch),
+          title: title,
+          content: content,
+          color: _color,
+          timestamp: DateTime.now().millisecondsSinceEpoch,
+        ),
       );
     } else {
       await useCases.updateNote(
