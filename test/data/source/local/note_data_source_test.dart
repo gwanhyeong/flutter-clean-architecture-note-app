@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:note_app/data/data_source/local/note_data_source.dart';
+import 'package:note_app/data/source/local/note_data_source.dart';
 import 'package:note_app/domain/model/note.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -15,10 +15,12 @@ void main() {
     // );
     final db = await databaseFactoryFfi.openDatabase(inMemoryDatabasePath);
 
-    await db.execute('CREATE TABLE note (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, content TEXT, color INTEGER, timestamp INTEGER)');
+    await db.execute(
+        'CREATE TABLE note (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, content TEXT, color INTEGER, timestamp INTEGER)');
     final dataSource = NoteDataSource(db);
 
-    await dataSource.insertNote(Note(title: 'test', content: 'test', color: 1, timestamp: 2));
+    await dataSource.insertNote(
+        Note(title: 'test', content: 'test', color: 1, timestamp: 2));
 
     expect((await dataSource.getNotes()).length, 1);
 

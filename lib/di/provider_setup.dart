@@ -1,4 +1,4 @@
-import 'package:note_app/data/data_source/local/note_data_source.dart';
+import 'package:note_app/data/source/local/note_data_source.dart';
 import 'package:note_app/data/repository/note_repository_impl.dart';
 import 'package:note_app/domain/use_case/add_note_use_case.dart';
 import 'package:note_app/domain/use_case/delete_note_use_case.dart';

@@ -1,7 +1,7 @@
-import 'package:note_app/core/result.dart';
-import 'package:note_app/data/data_source/local/note_data_source.dart';
+import 'package:note_app/common/result.dart';
+import 'package:note_app/data/source/local/note_data_source.dart';
 import 'package:note_app/domain/model/note.dart';
-import 'package:note_app/domain/repository/note_repository.dart';
+import 'package:note_app/domain/interface/repository/note_repository.dart';
 
 class NoteRepositoryImpl implements NoteRepository {
   NoteDataSource dataSource;
@@ -38,5 +38,4 @@ class NoteRepositoryImpl implements NoteRepository {
   Future<void> updateNote(Note note) async {
     await dataSource.updateNote(note);
   }
-
 }

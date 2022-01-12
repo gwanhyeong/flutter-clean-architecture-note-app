@@ -1,6 +1,6 @@
-import 'package:note_app/core/data_case.dart';
+import 'package:note_app/common/use_case.dart';
 import 'package:note_app/domain/model/note.dart';
-import 'package:note_app/domain/repository/note_repository.dart';
+import 'package:note_app/domain/interface/repository/note_repository.dart';
 import 'package:note_app/domain/util/note_order_type.dart';
 
 class GetNotesUseCase extends UseCase<List<Note>, NoteOrderType> {

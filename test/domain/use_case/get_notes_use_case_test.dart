@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:note_app/core/result.dart';
+import 'package:note_app/common/result.dart';
 import 'package:note_app/domain/model/note.dart';
-import 'package:note_app/domain/repository/note_repository.dart';
+import 'package:note_app/domain/interface/repository/note_repository.dart';
 import 'package:note_app/domain/use_case/get_notes_use_case.dart';
 import 'package:note_app/domain/util/note_order.dart';
 import 'package:note_app/domain/util/note_order_type.dart';

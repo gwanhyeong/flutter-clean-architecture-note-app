@@ -38,7 +38,6 @@ class NoteDataSource {
   }
 
   Future<void> deleteNote(Note note) async {
-    // DELETE FROM note WHERE id = 10;
     await db.delete('note', where: 'id = ?', whereArgs: [note.id]);
   }
 }

@@ -1,4 +1,4 @@
-import 'package:note_app/core/result.dart';
+import 'package:note_app/common/result.dart';
 import 'package:note_app/domain/model/note.dart';
 
 abstract class NoteRepository {
